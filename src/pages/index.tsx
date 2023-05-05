@@ -105,6 +105,13 @@ export default function Home() {
         >
           Save
         </button>
+        <button
+          onClick={() =>
+           setIsEditModalOpen(false)
+          }
+        >
+          Cancel
+        </button>
       </Modal>
     </>
   );
