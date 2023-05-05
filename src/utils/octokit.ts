@@ -64,8 +64,6 @@ export async function saveFileContent(
   setFileContent: React.Dispatch<React.SetStateAction<string>>,
   setEditModalFilePath: React.Dispatch<React.SetStateAction<string>>
 ): Promise<void> {
-  console.log(editModalFilePath, fileContent);
-  console.log(editModalFilePath);
   const response = await octokit.repos.createOrUpdateFileContents({
     owner: owner,
     repo: "files",
