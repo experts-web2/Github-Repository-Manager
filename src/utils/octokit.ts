@@ -1,5 +1,8 @@
 import { octokit} from "../credientials/credentials";
-const owner = "waqas831";
+const owner = process.env.REPO_OWNER;
+const file=process.env.REPO_NAME
+
+console.log(owner,file)
 
 type File = {
   name: string;
@@ -32,20 +35,39 @@ export const customModalStyles: CustomModalStyles = {
   },
 };
 
-export async function getFiles(): Promise<File[]> {
+
+
+
+
+export async function getFiles(path: string = ""): Promise<File[]> {
   try {
     const { data } = await octokit.repos.getContent({
       owner: owner,
-      repo: "files",
+      repo: file,
+      path: path,
     });
-    const files = data.filter((file: File) => file.type === "file");
-    console.log(files);
-    return files;
+
+    const files = data as File[];
+
+    const subDirs = files.filter((file) => file.type === "dir");
+    const subFiles = files.filter((file) => file.type === "file");
+    let allFiles = [...subFiles];
+
+    for (const subDir of subDirs) {
+      const dirFiles = await getFiles(subDir.path);
+      allFiles = [...allFiles, ...dirFiles];
+    }
+
+    return allFiles;
   } catch (error) {
     console.error(error);
     return [];
   }
 }
+
+
+
+
 
 export async function getFileContent(
   filePath: string,
@@ -57,7 +79,7 @@ export async function getFileContent(
     console.log(filePath,selectedRepo);
   const response = await octokit.repos.getContent({
     owner: owner,
-    repo: "files",
+    repo: file,
     path: filePath,
   });
   console.log(response);
@@ -70,7 +92,6 @@ export async function getFileContent(
 
 export async function saveFileContent(
   editModalFilePath: string,
-  selectedRepo:any,
   fileContent: string,
   setIsEditModalOpen:any,
   setFileContent: React.Dispatch<React.SetStateAction<string>>,
@@ -78,24 +99,24 @@ export async function saveFileContent(
 ): Promise<void> {
   const response = await octokit.repos.createOrUpdateFileContents({
     owner: owner,
-    repo: "files",
+    repo: file,
     path: editModalFilePath,
     message: "Update file content",
     content: Buffer.from(fileContent).toString("base64"),
-    sha: await getFileSha(editModalFilePath,selectedRepo),
+    sha: await getFileSha(editModalFilePath),
   });
 
   setFileContent("");
   setEditModalFilePath("");
   setIsEditModalOpen(false);
-//   getFiles();
+  getFiles();
 }
 
-export async function getFileSha(filePath: string,selectedRepo:any): Promise<string> {
+export async function getFileSha(filePath: string): Promise<string> {
   try {
     const response = await octokit.repos.getContent({
       owner: owner,
-      repo: "files",
+      repo: file,
       path: filePath,
     });
     return response.data.sha;
@@ -105,12 +126,12 @@ export async function getFileSha(filePath: string,selectedRepo:any): Promise<str
   }
 }
 
-export async function deleteFile(filePath: string,selectedRepo:any): Promise<void> {
+export async function deleteFile(filePath: string): Promise<void> {
   try {
-    const sha = await getFileSha(filePath,selectedRepo);
+    const sha = await getFileSha(filePath);
     const response = await octokit.repos.deleteFile({
       owner: owner,
-      repo: "files",
+      repo: file,
       path: filePath,
       message: "Delete file",
       sha: sha,
@@ -123,16 +144,5 @@ export async function deleteFile(filePath: string,selectedRepo:any): Promise<voi
 }
 
 
-export async function getRepositories() {
-    try {
-      const { data } = await octokit.repos.listForAuthenticatedUser({
-        per_page: 100,
-      });
-      console.log(data);
-      return data;
-    } catch (error) {
-      console.error(error);
-      return [];
-    }
-  }
+
   
