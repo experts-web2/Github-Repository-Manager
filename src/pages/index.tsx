@@ -7,14 +7,12 @@ import {
   deleteFile,
   getFiles,
   saveFileContent,
-  getFileContent,
 } from "../utils/octokit";
 import { octokit } from "@/credientials/credentials";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
-  const [isOpen, setIsOpen] = useState(false);
   const [files, setFiles] = useState<any[]>([]);
   const [fileContent, setFileContent] = useState("");
   const [isEditModalOpen, setIsEditModalOpen] = useState<any>(false);
@@ -50,12 +48,15 @@ export default function Home() {
           {files
             .filter((file) => file.type !== "dir")
             .map((file) => (
-              <li key={file.name} className="block shadow rounded md:flex justify-between items-center my-4 p-2">
+              <li
+                key={file.name}
+                className="block shadow rounded md:flex justify-between items-center my-4 p-2"
+              >
                 <div className="flex items-center">
-                <FiFile className="text-2xl text-gray-600 mr-2" />
-                <a href={file.html_url} className="text-xl text-black">
-                  {file.name}
-                </a>
+                  <FiFile className="text-2xl text-gray-600 mr-2" />
+                  <a href={file.html_url} className="text-xl text-black">
+                    {file.name}
+                  </a>
                 </div>
                 <div className="flex mt-4 mb-2 md:my-0 items-center justify-end">
                   <button
@@ -68,7 +69,11 @@ export default function Home() {
                   <button
                     className="text-white bg-red-700 hover:bg-red-800
                    font-medium rounded text-sm px-5 py-2 dark:bg-red-600 dark:hover:bg-red-700 "
-                    onClick={() => deleteFile(file.path)}
+                    onClick={() => {deleteFile(file.path)
+                    getFiles().then((data: any) => {
+                      setFiles(data);
+                    });
+                    }}
                   >
                     Delete
                   </button>
@@ -88,7 +93,7 @@ export default function Home() {
           cols={40}
           rows={40}
           style={{
-            width:"500px",
+            width: "500px",
             height: "200px",
           }}
           className="block max-w-xs  md:max-w-lg p-2.5 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 
@@ -98,30 +103,28 @@ export default function Home() {
           onChange={(e) => setFileContent(e.target.value)}
         />
         <div className="mt-4 flex items-center justify-end">
-        <button
-          onClick={() =>
-            saveFileContent(
-              editModalFilePath,
-              fileContent,
-              setFileContent,
-              setEditModalFilePath,
-              setIsEditModalOpen
-            )
-          }
-          className=" bg-blue-500  font-semibold font-medium
+          <button
+            onClick={() =>
+              saveFileContent(
+                editModalFilePath,
+                fileContent,
+                setFileContent,
+                setEditModalFilePath,
+                setIsEditModalOpen
+              )
+            }
+            className=" bg-blue-500  font-semibold font-medium
           text-white px-2 mr-2 py-1 border border-blue-500  rounded"
-        >
-          Save
-        </button>
-        <button
-          onClick={() =>
-           setIsEditModalOpen(false)
-          }
-          className=" bg-blue-500  font-semibold font-medium
+          >
+            Save
+          </button>
+          <button
+            onClick={() => setIsEditModalOpen(false)}
+            className=" bg-blue-500  font-semibold font-medium
            text-white px-2 py-1 border border-blue-500  rounded"
-        >
-          Cancel
-        </button>
+          >
+            Cancel
+          </button>
         </div>
       </Modal>
     </>
