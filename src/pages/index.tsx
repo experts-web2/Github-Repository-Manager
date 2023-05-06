@@ -3,11 +3,7 @@ import { Inter } from "next/font/google";
 import { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { customModalStyles } from "../constants/modalStyles";
-import {
-  deleteFile,
-  getFiles,
-  saveFileContent,
-} from "../utils/octokit";
+import { deleteFile, getFiles, saveFileContent } from "../utils/octokit";
 import { octokit } from "@/credientials/credentials";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -17,11 +13,21 @@ export default function Home() {
   const [fileContent, setFileContent] = useState("");
   const [isEditModalOpen, setIsEditModalOpen] = useState<any>(false);
   const [editModalFilePath, setEditModalFilePath] = useState("");
+  const [confirmDelete, setConfirmDelete] = useState(false);
+
+  const handleConfirmDelete = () => {
+    setConfirmDelete(true);
+  };
+
+  const handleCancelDelete = () => {
+    setConfirmDelete(false);
+  };
 
   useEffect(() => {
     getFiles().then((data: any) => {
       setFiles(data);
     });
+   
   }, []);
 
   async function getFileContent(filePath: string) {
@@ -66,18 +72,38 @@ export default function Home() {
                   >
                     Edit
                   </button>
-                  <button
-                    className="text-white bg-red-700 hover:bg-red-800
-                   font-medium rounded text-sm px-5 py-2 dark:bg-red-600 dark:hover:bg-red-700 "
-                    onClick={() => {
-                    deleteFile(file.path)
-                    getFiles().then((data: any) => {
-                      setFiles(data);
-                    });
-                    }}
-                  >
-                    Delete
-                  </button>
+                  {!confirmDelete && (
+                    <button
+                      className="text-white bg-red-700 hover:bg-red-800 font-medium rounded text-sm px-5 py-2 dark:bg-red-600 dark:hover:bg-red-700"
+                      onClick={handleConfirmDelete}
+                    >
+                      Delete
+                    </button>
+                  )}
+                  {confirmDelete && (
+        <div className="fixed inset-0 z-50 flex justify-center items-center">
+          <div className="absolute inset-0 bg-gray-900 opacity-50"></div>
+          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md z-10">
+            <p className="text-gray-900 dark:text-white mb-2">
+              Are you sure you want to delete this file?
+            </p>
+            <div className="flex justify-end">
+              <button
+                className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 mr-2"
+                onClick={handleCancelDelete}
+              >
+                Cancel
+              </button>
+              <button
+                className="text-white bg-red-700 hover:bg-red-800 font-medium rounded text-sm px-5 py-2 dark:bg-red-600 dark:hover:bg-red-700"
+                onClick={()=>deleteFile(file.path,setConfirmDelete)}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
                 </div>
               </li>
             ))}

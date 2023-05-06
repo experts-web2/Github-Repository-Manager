@@ -93,7 +93,7 @@ export async function getFileSha(filePath: string): Promise<string> {
   }
 }
 
-export async function deleteFile(filePath: string): Promise<void> {
+export async function deleteFile(filePath: string,setConfirmDelete:any): Promise<void> {
   try {
     const sha = await getFileSha(filePath);
     if (!sha) {
@@ -106,6 +106,7 @@ export async function deleteFile(filePath: string): Promise<void> {
       message: "Delete file",
       sha: sha,
     });
+    setConfirmDelete(false);
     getFiles();
   } catch (error) {
     console.error(error);
