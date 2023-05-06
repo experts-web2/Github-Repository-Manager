@@ -107,7 +107,7 @@ export async function deleteFile(filePath: string,setConfirmDelete:any): Promise
       sha: sha,
     });
     setConfirmDelete(false);
-    getFiles();
+  
   } catch (error) {
     console.error(error);
   }
