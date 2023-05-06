@@ -33,6 +33,17 @@ export default function Home() {
    
   }, []);
 
+  const deleteSelectedFile = ()=>{
+    deleteFile(deleteFilePath).then((response: any) => {
+      if(response){
+      setDeleteFilePath("");
+      setConfirmDelete(false);
+      }
+      
+    })
+
+  }
+
   async function getFileContent(filePath: string) {
     const response = await octokit.repos.getContent({
       owner: process.env.REPO_OWNER,
@@ -88,7 +99,8 @@ export default function Home() {
           <div className="absolute inset-0 bg-gray-900 opacity-50"></div>
           <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md z-10">
             <p className="text-gray-900 dark:text-white mb-2">
-              Are you sure you want to delete the {deleteFilePath}?
+              Are you sure you want to delete the {deleteFilePath} file?<br/>
+              It will take 1 minute to remove from the list.
             </p>
             <div className="flex justify-end">
               <button
@@ -99,7 +111,7 @@ export default function Home() {
               </button>
               <button
                 className="text-white bg-red-700 hover:bg-red-800 font-medium rounded text-sm px-5 py-2 dark:bg-red-600 dark:hover:bg-red-700"
-                onClick={()=>deleteFile(deleteFilePath,setConfirmDelete)}
+                onClick={deleteSelectedFile}
               >
                 Delete
               </button>
