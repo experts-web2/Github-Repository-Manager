@@ -2,8 +2,8 @@ import { FiFile } from "react-icons/fi";
 import { Inter } from "next/font/google";
 import { useEffect, useState } from "react";
 import Modal from "react-modal";
-import { customModalStyles } from "../constants/modalStyles";
-import { deleteFile, getFiles, saveFileContent } from "../utils/octokit";
+import { customModalStyles } from "@/constants/modalStyles";
+import { deleteFile, getFiles, saveFileContent } from "@/utils/octokit";
 import { octokit } from "@/credientials/credentials";
 
 const inter = Inter({ subsets: ["latin"] });

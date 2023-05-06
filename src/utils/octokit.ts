@@ -66,7 +66,7 @@ export async function saveFileContent(
 ): Promise<void> {
   const response = await octokit.repos.createOrUpdateFileContents({
     owner: owner,
-    repo: "files",
+    repo: repo,
     path: editModalFilePath,
     message: "Update file content",
     content: Buffer.from(fileContent).toString("base64"),
