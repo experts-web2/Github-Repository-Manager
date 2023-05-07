@@ -93,7 +93,7 @@ export async function getFileSha(filePath: string): Promise<string> {
   }
 }
 
-export async function deleteFile(filePath: string): Promise<void> {
+export async function deleteFile(filePath: string,setConfirmDelete:any): Promise<void> {
   try {
     const sha = await getFileSha(filePath);
     if (!sha) {
@@ -106,10 +106,25 @@ export async function deleteFile(filePath: string): Promise<void> {
       message: "Delete file from file manager",
       sha: sha,
     });
-    setConfirmDelete(false);
-    getFiles();
   } catch (error) {
     console.error(error);
   }
 }
 
+
+
+export async function getFileContents(filePath: string): Promise<string> {
+  try {
+    const response = await octokit.repos.getContent({
+      owner: process.env.REPO_OWNER,
+      repo: process.env.REPO_NAME,
+      path: filePath,
+    });
+
+    const fileContent = Buffer.from(response.data.content, "base64").toString();
+    return fileContent;
+  } catch (error) {
+    console.error(error);
+    return ""; 
+  }
+}
