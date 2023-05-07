@@ -1,16 +1,7 @@
 import { customModalStyles } from "@/constants/modalStyles";
+import { EditModelProps } from "@/types/types";
 import React from "react";
 import Modal from "react-modal";
-
-interface Props {
-  isEditModalOpen: boolean;
-  setIsEditModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  fileContent: string;
-  setFileContent: React.Dispatch<React.SetStateAction<string>>;
-  editModalFilePath: string;
-  setEditModalFilePath: React.Dispatch<React.SetStateAction<string>>;
-  saveFileContent: any;
-}
 
 const EditModel = ({
   isEditModalOpen,
@@ -20,7 +11,7 @@ const EditModel = ({
   editModalFilePath,
   setEditModalFilePath,
   saveFileContent,
-}: Props) => {
+}: EditModelProps) => {
   return (
     <>
       <Modal

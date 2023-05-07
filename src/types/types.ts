@@ -14,4 +14,21 @@ export type File = {
       html: string;
     };
   };
+
+
+  export interface DeleteConfirmationModalProps {
+    deleteFilePath: string;
+    onCancelDelete: () => void;
+    onDeleteFile: () => void;
+  }
   
+
+  export interface EditModelProps {
+    isEditModalOpen: boolean;
+    setIsEditModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    fileContent: string;
+    setFileContent: React.Dispatch<React.SetStateAction<string>>;
+    editModalFilePath: string;
+    setEditModalFilePath: React.Dispatch<React.SetStateAction<string>>;
+    saveFileContent: any;
+  }
