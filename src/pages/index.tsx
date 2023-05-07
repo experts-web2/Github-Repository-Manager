@@ -2,8 +2,8 @@ import { FiFile } from "react-icons/fi";
 import { Inter } from "next/font/google";
 import { useEffect, useState } from "react";
 import Modal from "react-modal";
-import { customModalStyles } from "../constants/modalStyles";
-import { deleteFile, getFiles, saveFileContent } from "../utils/octokit";
+import { customModalStyles } from "@/constants/modalStyles";
+import { deleteFile, getFiles, saveFileContent } from "@/utils/octokit";
 import { octokit } from "@/credientials/credentials";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -14,12 +14,15 @@ export default function Home() {
   const [isEditModalOpen, setIsEditModalOpen] = useState<any>(false);
   const [editModalFilePath, setEditModalFilePath] = useState("");
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [deleteFilePath, setDeleteFilePath] = useState("")
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = (filePath: string) => {
+    setDeleteFilePath(filePath)
     setConfirmDelete(true);
   };
 
   const handleCancelDelete = () => {
+    setDeleteFilePath("");
     setConfirmDelete(false);
   };
 
@@ -29,6 +32,17 @@ export default function Home() {
     });
    
   }, []);
+
+  const deleteSelectedFile = ()=>{
+    deleteFile(deleteFilePath).then((response: any) => {
+      if(response){
+      setDeleteFilePath("");
+      setConfirmDelete(false);
+      }
+      
+    })
+
+  }
 
   async function getFileContent(filePath: string) {
     const response = await octokit.repos.getContent({
@@ -75,7 +89,7 @@ export default function Home() {
                   {!confirmDelete && (
                     <button
                       className="text-white bg-red-700 hover:bg-red-800 font-medium rounded text-sm px-5 py-2 dark:bg-red-600 dark:hover:bg-red-700"
-                      onClick={handleConfirmDelete}
+                      onClick={() => handleConfirmDelete(file.path)}
                     >
                       Delete
                     </button>
@@ -85,7 +99,8 @@ export default function Home() {
           <div className="absolute inset-0 bg-gray-900 opacity-50"></div>
           <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md z-10">
             <p className="text-gray-900 dark:text-white mb-2">
-              Are you sure you want to delete this file?
+              Are you sure you want to delete the {deleteFilePath} file?<br/>
+              It will take 1 minute to remove from the list.
             </p>
             <div className="flex justify-end">
               <button
@@ -96,7 +111,7 @@ export default function Home() {
               </button>
               <button
                 className="text-white bg-red-700 hover:bg-red-800 font-medium rounded text-sm px-5 py-2 dark:bg-red-600 dark:hover:bg-red-700"
-                onClick={()=>deleteFile(file.path,setConfirmDelete)}
+                onClick={deleteSelectedFile}
               >
                 Delete
               </button>

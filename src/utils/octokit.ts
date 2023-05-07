@@ -66,7 +66,7 @@ export async function saveFileContent(
 ): Promise<void> {
   const response = await octokit.repos.createOrUpdateFileContents({
     owner: owner,
-    repo: "files",
+    repo: repo,
     path: editModalFilePath,
     message: "Update file content",
     content: Buffer.from(fileContent).toString("base64"),
@@ -93,21 +93,21 @@ export async function getFileSha(filePath: string): Promise<string> {
   }
 }
 
-export async function deleteFile(filePath: string,setConfirmDelete:any): Promise<void> {
+export async function deleteFile(filePath: string): Promise<void> {
   try {
     const sha = await getFileSha(filePath);
     if (!sha) {
       return;
     }
-    const response = await octokit.repos.deleteFile({
+    return await octokit.repos.deleteFile({
       owner:owner,
       repo:repo,
       path: filePath.replace(/\\/g, '/'),
-      message: "Delete file",
+      message: "Delete file from file manager",
       sha: sha,
     });
     setConfirmDelete(false);
-  
+    getFiles();
   } catch (error) {
     console.error(error);
   }
