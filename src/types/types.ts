@@ -17,7 +17,7 @@ export type File = {
 
 
   export interface DeleteConfirmationModalProps {
-    deleteFilePath: string;
+    filePath: string;
     onCancelDelete: () => void;
     onDeleteFile: () => void;
   }
@@ -30,5 +30,4 @@ export type File = {
     setFileContent: React.Dispatch<React.SetStateAction<string>>;
     editModalFilePath: string;
     setEditModalFilePath?: React.Dispatch<React.SetStateAction<string>>;
-    saveFileContent: any;
   }

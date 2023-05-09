@@ -2,7 +2,7 @@ import { DeleteConfirmationModalProps } from "@/types/types";
 import React from "react";
 
 function DeleteConfirmationModal({
-  deleteFilePath,
+  filePath,
   onCancelDelete,
   onDeleteFile,
 }: DeleteConfirmationModalProps) {
@@ -11,7 +11,7 @@ function DeleteConfirmationModal({
       <div className="absolute inset-0 bg-gray-900 opacity-50"></div>
       <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md z-10">
         <p className="text-gray-900 dark:text-white mb-2">
-          Are you sure you want to delete the {deleteFilePath} file?
+          Are you sure you want to delete the {filePath} file?
           <br />
           It will take 1 minute to remove from the list.
         </p>

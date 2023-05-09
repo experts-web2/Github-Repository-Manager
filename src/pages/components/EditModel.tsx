@@ -2,6 +2,7 @@ import { customModalStyles } from "@/constants/modalStyles";
 import { EditModelProps } from "@/types/types";
 import React from "react";
 import Modal from "react-modal";
+import { saveFileContent } from "@/utils/octokit";
 
 const EditModel = ({
   isEditModalOpen,
@@ -9,20 +10,19 @@ const EditModel = ({
   fileContent,
   setFileContent,
   editModalFilePath,
-  saveFileContent,
 }: EditModelProps) => {
   async function handleSave() {
     const res = await saveFileContent(editModalFilePath, fileContent);
     if (res) {
       setIsEditModalOpen(false);
       setFileContent("");
-      
     }
   }
 
   return (
     <>
       <Modal
+        ariaHideApp={false}
         isOpen={isEditModalOpen}
         onRequestClose={() => setIsEditModalOpen(false)}
         style={customModalStyles}
