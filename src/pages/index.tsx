@@ -107,7 +107,6 @@ export default function Home() {
         fileContent={fileContent}
         setFileContent={setFileContent}
         editModalFilePath={editModalFilePath}
-        setEditModalFilePath={setEditModalFilePath}
         saveFileContent={saveFileContent}
       />
     </>

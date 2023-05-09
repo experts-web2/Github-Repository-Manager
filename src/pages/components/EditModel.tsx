@@ -9,9 +9,17 @@ const EditModel = ({
   fileContent,
   setFileContent,
   editModalFilePath,
-  setEditModalFilePath,
   saveFileContent,
 }: EditModelProps) => {
+  async function handleSave() {
+    const res = await saveFileContent(editModalFilePath, fileContent);
+    if (res) {
+      setIsEditModalOpen(false);
+      setFileContent("");
+      
+    }
+  }
+
   return (
     <>
       <Modal
@@ -33,15 +41,7 @@ const EditModel = ({
         />
         <div className="mt-4 flex items-center justify-end">
           <button
-            onClick={() =>
-              saveFileContent(
-                editModalFilePath,
-                fileContent,
-                setFileContent,
-                setEditModalFilePath,
-                setIsEditModalOpen
-              )
-            }
+            onClick={handleSave}
             className="bg-blue-500 font-semibold font-medium text-white px-2 mr-2 py-1 border border-blue-500 rounded"
           >
             Save

@@ -29,6 +29,6 @@ export type File = {
     fileContent: string;
     setFileContent: React.Dispatch<React.SetStateAction<string>>;
     editModalFilePath: string;
-    setEditModalFilePath: React.Dispatch<React.SetStateAction<string>>;
+    setEditModalFilePath?: React.Dispatch<React.SetStateAction<string>>;
     saveFileContent: any;
   }

@@ -60,24 +60,23 @@ export async function getFiles(path: string = ""): Promise<File[]> {
 export async function saveFileContent(
   editModalFilePath: string,
   fileContent: string,
-  setIsEditModalOpen: any,
-  setFileContent: React.Dispatch<React.SetStateAction<string>>,
-  setEditModalFilePath: React.Dispatch<React.SetStateAction<string>>
-): Promise<void> {
-  const response = await octokit.repos.createOrUpdateFileContents({
-    owner: owner,
-    repo: repo,
-    path: editModalFilePath,
-    message: "Update file content",
-    content: Buffer.from(fileContent).toString("base64"),
-    sha: await getFileSha(editModalFilePath),
-  });
-
-  setFileContent("");
-  setEditModalFilePath("");
-  setIsEditModalOpen(false);
-  getFiles();
+): Promise<any> {
+  try {
+    const response = await octokit.repos.createOrUpdateFileContents({
+      owner: owner,
+      repo: repo,
+      path: editModalFilePath,
+      message: "Update file content",
+      content: Buffer.from(fileContent).toString("base64"),
+      sha: await getFileSha(editModalFilePath),
+    });
+    return response;
+  } catch (error) {
+    console.error("Error saving file content: ", error);
+    return null;
+  }
 }
+
 
 export async function getFileSha(filePath: string): Promise<string> {
   try {
